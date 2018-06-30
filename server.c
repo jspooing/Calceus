@@ -121,11 +121,11 @@ void *clnt_connection(void* arg){
 	while(str_len = recv(sock,message,BUFSIZE,0)>0){
 		str_len = strlen(message);
 		
-		ptr = strtok(message, " ");
+		ptr = strtok(message, "^");
 		i=0;
 		while(ptr != NULL){
 			command[i] = ptr;
-			ptr = strtok(NULL, " ");
+			ptr = strtok(NULL, "^");
 			i++;
 			if(i > 20)break;
 		}
@@ -149,21 +149,23 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"siu")){
 			//DB 입력
-		
+			
 			
 			for(i=0; i <5; i++){
 				sprintf(data[i],"%s",command[i+1]);
-				printf("%s ",data[i]);
 			}
 			DBinsert("USER",data,5 );
 			
 		}
 	
 		else if(!strcmp(command[0],"sid")){
-			if(!strcmp(command[5],"zzzz"))   //D_aff null값 처리 
-				sprintf(command[5],"");    
 			//DB 입력 
-
+			for(i=0;i<6;i ++)
+				sprintf(data[i],"%s",command[i+1]);
+			if(!strcmp(data[5],"zzzz"))
+				sprintf(data[5],"");
+				
+			DBinsert("DESIGNER",data,6);
 		}
 
 

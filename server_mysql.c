@@ -41,8 +41,8 @@ int DBinsert(char* table , char data[][100], int nData){
 	printf("%s",query);
 
 	
-
-	//query_stat = mysql_query(connection, "insert into USER values(\'jspooing\',\'JEONGSOO\',\'1234\',\'jspooing@naver.com\',\'GJ south seomoondaero 660 102 - 502\')");
+	fflush(stdin);
+	query_stat = mysql_query(connection,query);
 
 
 	mysql_close(connection);
