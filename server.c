@@ -109,7 +109,7 @@ int findEmpty(int indicator, int *slot, int s_size){
 void *clnt_connection(void* arg){
 	int* pSock = (int*) arg;
 	int sock = *pSock;
-	char* command[5];
+	char* command[20];
 	char* ptr;
 	int str_len;
 	char message[BUFSIZE];
@@ -126,20 +126,37 @@ void *clnt_connection(void* arg){
 			command[i] = ptr;
 			ptr = strtok(NULL, " ");
 			i++;
-			if(i > 4)break;
+			if(i > 20)break;
 		}
 
 		str_len = strlen(command[0]);
 		memset(buf,0x00,sizeof(buf));	
-		if(!strcmp(command[0],"hey")){
-			printf("hey\n");
-			sprintf(buf,"hey");	
+		
+		//서버 명령어 처리 
+
+		//로그인 
+		if(!strcmp(command[0],"login")){
+			printf("login %s/%s\n",command[1],command[2]);
+
+			//로그인 정보 조회
+
+			sprintf(buf,"1");// test form : 모든 로그인 시도 성공 	
 			str_len = strlen(buf);
 			write(sock,buf,str_len);
 			printf("server send c%d:%s\n",sock,buf);
 		}
-		
-		
+
+		else if(!strcmp(command[0],"siu")){
+			//DB 입력 
+		}
+	
+		else if(!strcmp(command[0],"sid")){
+			if(!strcmp(command[5],"zzzz"))   //D_aff null값 처리 
+				sprintf(command[5],"");    
+			//DB 입력 
+
+		}
+
 
 
 		else 
