@@ -24,7 +24,6 @@ int clnt_sock[MAX_CLIENT]; //클라이언트 소켓
 int clnt_con[MAX_CLIENT] = {0};       //클라이언트 접속 정보
 int clnt_indicator = 0;  //클라이언트 교통정리용 
 
-
 int main(int argc, char ** argv)
 {
 	int serv_sock; // 서버  소켓 
@@ -147,7 +146,9 @@ void *clnt_connection(void* arg){
 		}
 
 		else if(!strcmp(command[0],"siu")){
-			//DB 입력 
+			//DB 입력
+
+
 		}
 	
 		else if(!strcmp(command[0],"sid")){
@@ -189,4 +190,5 @@ void *clnt_connection(void* arg){
 
 	return 0;
 }
+
 
