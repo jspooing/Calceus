@@ -8,6 +8,7 @@
 #include "sys/types.h"
 #include "sys/socket.h"
 #include "pthread.h"
+#include "calceus.h"
 
 #define BUFSIZE 1024 //버퍼 사이즈 
 #define PORT 7163 //서버 포트 
@@ -109,6 +110,7 @@ void *clnt_connection(void* arg){
 	int* pSock = (int*) arg;
 	int sock = *pSock;
 	char* command[20];
+	char data[12][100];
 	char* ptr;
 	int str_len;
 	char message[BUFSIZE];
@@ -147,8 +149,14 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"siu")){
 			//DB 입력
-
-
+		
+			
+			for(i=0; i <5; i++){
+				sprintf(data[i],"%s",command[i+1]);
+				printf("%s ",data[i]);
+			}
+			DBinsert("USER",data,5 );
+			
 		}
 	
 		else if(!strcmp(command[0],"sid")){
