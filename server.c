@@ -135,7 +135,7 @@ void *clnt_connection(void* arg){
 
 		//로그인 
 		if(!strcmp(command[0],"login")){
-			printf("login %s/%s\n",command[1],command[2]);
+			printf("login %s %s\n",command[1],command[2]);
 
 			//로그인 정보 조회
 
