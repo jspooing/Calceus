@@ -7,8 +7,8 @@ def run():
     data = [int(num) for num in streamf.read().split()]
     streamf.close()
 
-    print(len(data))
-    print(data)
+    #print(len(data))
+    #print(data)
 
     # The List as a stack for press value
     tmp_l = [0, 0, 0, 0, 0]
@@ -20,15 +20,15 @@ def run():
             tmp_l[i]+=data[i+(j*10)]
             tmp_r[i]+=data[i+((j*10)+5)]
 
-    print(tmp_l, tmp_r)
+    #print(tmp_l, tmp_r)
     print("=======================")
 
     for i in range(0, len(tmp_l)):
         tmp_l[i]/=IndexOfData
         tmp_r[i]/=IndexOfData
 
-    print("Average of LFoot : ", tmp_l)
-    print("Average of RFoot : ", tmp_r)
+    #print("Average of LFoot : ", tmp_l)
+    #print("Average of RFoot : ", tmp_r)
 
     out_l=[]
     out_r=[]
@@ -47,7 +47,6 @@ def run():
 
     return tmp_l+tmp_r
 
-# Visualize step
 def visualize(pressure):
     type=['LFoot1', 'LFoot2', 'LFoot3', 'LFoot4', 'LFoot5',
           'RFoot1', 'RFoot2', 'RFoot3', 'RLFoot4', 'RFoot5']
@@ -69,10 +68,19 @@ def visualize(pressure):
     plt.savefig('result.png')
 
 def contents(data):
-    pass
+    info1 = '''Your result ~~~ '''+'\n'
+    info=""
+    for i in range(0, 5):
+        info+=("Left Foot P"+str(i)+" : "+str(int(data[i]))+'\n')
+    for i in range(0, 5):
+        info+=("Right Foot P"+str(i)+" : "+str(int(data[i+5]))+'\n')
 
+    result=info1+info
+    out_text=open('content.txt', 'w')
+    out_text.write(result)
+    out_text.close()
 
 
 # Execute
 visualize(run())
-#contents(run())
+contents(run())
