@@ -1,7 +1,6 @@
 import random
 
 def L_testcase():
-    # 왼발 압력점 테스트
     L_p1 = random.randrange(40,50)+random.random()
     L_p2 = random.randrange(40,60)+random.random()
     L_p3 = random.randrange(40,60)+random.random()
@@ -14,7 +13,6 @@ def L_testcase():
 
 def R_testcase():
 
-    # 오른발 압력점 테스트
     R_p1 = random.randrange(40, 50)+random.random()
     R_p2 = random.randrange(40, 60)+random.random()
     R_p3 = random.randrange(40, 60)+random.random()
