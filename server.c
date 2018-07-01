@@ -117,6 +117,8 @@ void *clnt_connection(void* arg){
 	char buf[BUFSIZE];
 	int i,j,k;
 	int pr_data[5];
+	
+	pthread_t t_tBend;
 
 	memset(message,0x00, sizeof(message));
 	while(str_len = recv(sock,message,BUFSIZE,0)>0){
@@ -176,7 +178,7 @@ void *clnt_connection(void* arg){
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
 
-			for(i=0; i < 10;i++){
+			for(i=0; i < 3;i++){
 				memset(message,0x00,sizeof(message));
 				str_len = recv(sock,message,BUFSIZE,0);	
 				
@@ -203,7 +205,14 @@ void *clnt_connection(void* arg){
 				write(sock,"ok",3);
 			}
 
-			write(sock,"tend",sizeof("tend"));
+			//write(sock,"tend",sizeof("tend"));
+			
+			if(pthread_create(&t_tBend,NULL,t_testBackend,NULL)<0){
+				printf("t_testBackend err\n");
+			}
+
+
+
 		}	
 		else if(!strcmp(command[0],"tst")){
 			
