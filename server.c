@@ -235,7 +235,12 @@ void *clnt_connection(void* arg){
 			}
 
 			write(sock,"tend",sizeof("tend"));
+		
+
+			//파이썬 실행 라인 넣어야함.
 			
+
+
 		}
 
 		else 
