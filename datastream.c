@@ -3,11 +3,10 @@
 #include<string.h>
 #include<sys/types.h>
 #include<fcntl.h>
-#include<string.h>
 
 #define NUM_DATA 5
 #define STREAM_PATH "/home/chc/calceus/datastream/stream.txt"
-
+#define STREAM_VAL "/home/chc/calceus/datastream/value.txt"
 #define CHPN(x) x[strlen(x)] = '\n'
 
 int inputStream(int* data,int num){
@@ -34,7 +33,26 @@ int inputStream(int* data,int num){
 
 	len = strlen(buf);
 	write(fd,buf,len);
-
+	
+	close(fd);
 	return len;
+
+}
+
+
+void* t_testBackend(void *data){
+
+		File *fp;
+		int val[5];
+		int i;
+	
+		fp= fopen(STREAM_VAL,"r");
+		
+		for(i=0; i < 5 ; i ++)
+			fscanf(fp,"%d\n",val[i]);
+		
+		
+
+		return;
 
 }
