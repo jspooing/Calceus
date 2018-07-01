@@ -42,12 +42,16 @@ int inputStream(int* data,int num){
 
 void* t_testBackend(void *data){
 
-		File *fp;
+		FILE *fp;
 		int val[5];
 		int i;
-	
+		
+		printf("good!\n");
+
 		fp= fopen(STREAM_VAL,"r");
 		
+
+
 		for(i=0; i < 5 ; i ++)
 			fscanf(fp,"%d\n",val[i]);
 		
