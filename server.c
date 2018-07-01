@@ -172,7 +172,15 @@ void *clnt_connection(void* arg){
 			DBinsert("DESIGNER",data,6);
 		}
 
+		else if(!strcmp(command[0],"test")){
+			int testset[5];
+			for(i=0; i<5; i++)
+				testset[i] = i+1;
 
+			inputStream(testset,5);
+
+		
+		}
 
 		else 
 
