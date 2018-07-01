@@ -117,12 +117,14 @@ void *clnt_connection(void* arg){
 	char buf[BUFSIZE];
 	int i,j,k;
 	int pr_data[5];
-	
+
 	pthread_t t_tBend;
 
 	memset(message,0x00, sizeof(message));
 	while(str_len = recv(sock,message,BUFSIZE,0)>0){
 		str_len = strlen(message);
+
+		printf("message : %s\n",message);
 
 		ptr = strtok(message, "^");
 		i=0;
@@ -143,8 +145,10 @@ void *clnt_connection(void* arg){
 			printf("login %s %s\n",command[1],command[2]);
 
 			//로그인 정보 조회
+			i = checkLogin(command[1],command[2]);
 
-			sprintf(buf,"1");// test form : 모든 로그인 시도 성공 	
+
+			sprintf(buf,"%d",i);	
 			str_len = strlen(buf);
 			write(sock,buf,str_len);
 			printf("server send c%d:%s\n",sock,buf);
@@ -181,12 +185,12 @@ void *clnt_connection(void* arg){
 			for(i=0; i < 3;i++){
 				memset(message,0x00,sizeof(message));
 				str_len = recv(sock,message,BUFSIZE,0);	
-				
+
 				printf("received : %s   ",message);
 
 
 				if(!strcmp(command[0],""))
-				str_len = strlen(message);
+					str_len = strlen(message);
 
 				ptr = strtok(message, " ");
 				j=0;
@@ -205,8 +209,8 @@ void *clnt_connection(void* arg){
 				write(sock,"ok",3);
 			}
 
-			//write(sock,"tend",sizeof("tend"));
-			
+			write(sock,"tend",sizeof("tend"));
+
 			if(pthread_create(&t_tBend,NULL,t_testBackend,NULL)<0){
 				printf("t_testBackend err\n");
 			}
@@ -215,17 +219,16 @@ void *clnt_connection(void* arg){
 
 		}	
 		else if(!strcmp(command[0],"tst")){
-			
 
 			for(i=0; i < 10;i++){
 				memset(message,0x00,sizeof(message));
 				str_len = recv(sock,message,BUFSIZE,0);	
-				
-				printf("received : %s",message);
+
+				printf("received : %s   ",message);
 
 
 				if(!strcmp(command[0],""))
-				str_len = strlen(message);
+					str_len = strlen(message);
 
 				ptr = strtok(message, "^");
 				j=0;
@@ -243,12 +246,14 @@ void *clnt_connection(void* arg){
 				inputStream(pr_data,5);
 			}
 
-			write(sock,"tend",sizeof("tend"));
-		
 
-			//파이썬 실행 라인 넣어야함.
-			
+			if(pthread_create(&t_tBend,NULL,t_testBackend,NULL)<0){
+				printf("t_testBackend err\n");
+			}
 
+
+			write(sock,"dbend\n",sizeof("dbend\n"));
+			printf ("send: dbend\n");
 
 		}
 

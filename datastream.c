@@ -46,15 +46,20 @@ void* t_testBackend(void *data){
 		int val[5];
 		int i;
 		
-		printf("good!\n");
 
 		fp= fopen(STREAM_VAL,"r");
 		
 
 
 		for(i=0; i < 5 ; i ++)
-			fscanf(fp,"%d\n",val[i]);
+			fscanf(fp,"%d\n",&val[i]);
 		
+		
+			
+		printf("read file : ");
+		for(i=0;i < 5 ; i++)
+			printf("%d ",val[i]);
+
 		
 
 		return;
