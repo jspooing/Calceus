@@ -17,5 +17,8 @@ server.o : server.c
 datastream.o : datastream.c
 	$(CC) -c $^
 
+jw: logincheck.c
+	$(CC) -o a.out $^ $(CFLAGS)
+
 clean : 
 	rm $(TARGET)  
