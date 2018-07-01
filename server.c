@@ -176,52 +176,65 @@ void *clnt_connection(void* arg){
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
 
-			for(i=0; i < 3;i++){
+			for(i=0; i < 10;i++){
+				memset(message,0x00,sizeof(message));
 				str_len = recv(sock,message,BUFSIZE,0);	
 				
+				printf("received : %s   ",message);
+
+
 				if(!strcmp(command[0],""))
 				str_len = strlen(message);
 
 				ptr = strtok(message, " ");
 				j=0;
 				while(ptr != NULL){
-					command[i] = ptr;
+					command[j] = ptr;
 					ptr = strtok(NULL, " ");
 					j++;
 					if(j > 20)break;
 				}
-				
-				for(j=0;j<3;j++){
-
-					sscanf(command[j],"%d",pr_data[j]);
+				for(j=0;j<5;j++){
+					sscanf(command[j],"%d",&pr_data[j]);
 				}
-				
+
 
 				inputStream(pr_data,5);
 				write(sock,"ok",3);
 			}
-			
-		}
+
+			write(sock,"tend",sizeof("tend"));
+		}	
 		else if(!strcmp(command[0],"tst")){
 			
+
 			for(i=0; i < 10;i++){
+				memset(message,0x00,sizeof(message));
 				str_len = recv(sock,message,BUFSIZE,0);	
 				
+				printf("received : %s",message);
+
+
 				if(!strcmp(command[0],""))
 				str_len = strlen(message);
 
 				ptr = strtok(message, "^");
-				i=0;
+				j=0;
 				while(ptr != NULL){
-					command[i] = ptr;
+					command[j] = ptr;
 					ptr = strtok(NULL, "^");
-					i++;
-					if(i > 20)break;
+					j++;
+					if(j > 20)break;
 				}
-				
-				inputStream(command,5);
+				for(j=0;j<5;j++){
+					sscanf(command[j],"%d",&pr_data[j]);
+				}
 
+
+				inputStream(pr_data,5);
 			}
+
+			write(sock,"tend",sizeof("tend"));
 			
 		}
 
