@@ -3,6 +3,7 @@
 #include<string.h>
 #include<sys/types.h>
 #include<fcntl.h>
+#include"calceus.h"
 
 #define NUM_DATA 5
 #define STREAM_PATH "/home/chc/calceus/datastream/stream.txt"
@@ -41,9 +42,12 @@ int inputStream(int* data,int num){
 
 
 void* t_testBackend(void *data){
-
+		
+		char* id = (char *)data;
+		
 		FILE *fp;
 		int val[5];
+		char ilist[3][100];
 		int i;
 		
 
@@ -55,12 +59,11 @@ void* t_testBackend(void *data){
 			fscanf(fp,"%d\n",&val[i]);
 		
 		
+		sprintf(ilist[0],"%s",id);
+		sprintf(ilist[1],"%d",val[0]);
+		sprintf(ilist[2],"-1");
 			
-		printf("read file : ");
-		for(i=0;i < 5 ; i++)
-			printf("%d ",val[i]);
-
-		
+		DBinsert("USER_TEST",ilist,3);
 
 		return;
 

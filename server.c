@@ -117,6 +117,7 @@ void *clnt_connection(void* arg){
 	char buf[BUFSIZE];
 	int i,j,k;
 	int pr_data[5];
+	char uid[15];
 
 	pthread_t t_tBend;
 
@@ -146,8 +147,8 @@ void *clnt_connection(void* arg){
 
 			//로그인 정보 조회
 			i = checkLogin(command[1],command[2]);
-
-
+			
+			sprintf(uid,"%s",command[1]);
 			sprintf(buf,"%d",i);	
 			str_len = strlen(buf);
 			write(sock,buf,str_len);
@@ -182,36 +183,7 @@ void *clnt_connection(void* arg){
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
 
-			for(i=0; i < 3;i++){
-				memset(message,0x00,sizeof(message));
-				str_len = recv(sock,message,BUFSIZE,0);	
-
-				printf("received : %s   ",message);
-
-
-				if(!strcmp(command[0],""))
-					str_len = strlen(message);
-
-				ptr = strtok(message, " ");
-				j=0;
-				while(ptr != NULL){
-					command[j] = ptr;
-					ptr = strtok(NULL, " ");
-					j++;
-					if(j > 20)break;
-				}
-				for(j=0;j<5;j++){
-					sscanf(command[j],"%d",&pr_data[j]);
-				}
-
-
-				inputStream(pr_data,5);
-				write(sock,"ok",3);
-			}
-
-			write(sock,"tend",sizeof("tend"));
-
-			if(pthread_create(&t_tBend,NULL,t_testBackend,NULL)<0){
+			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
 				printf("t_testBackend err\n");
 			}
 
