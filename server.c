@@ -120,7 +120,7 @@ void *clnt_connection(void* arg){
 	memset(message,0x00, sizeof(message));
 	while(str_len = recv(sock,message,BUFSIZE,0)>0){
 		str_len = strlen(message);
-		
+
 		ptr = strtok(message, "^");
 		i=0;
 		while(ptr != NULL){
@@ -132,7 +132,7 @@ void *clnt_connection(void* arg){
 
 		str_len = strlen(command[0]);
 		memset(buf,0x00,sizeof(buf));	
-		
+
 		//서버 명령어 처리 
 
 		//로그인 
@@ -147,24 +147,28 @@ void *clnt_connection(void* arg){
 			printf("server send c%d:%s\n",sock,buf);
 		}
 
+
+		// 유저 회원가입 
 		else if(!strcmp(command[0],"siu")){
 			//DB 입력
-			
-			
+
+
 			for(i=0; i <5; i++){
 				sprintf(data[i],"%s",command[i+1]);
 			}
 			DBinsert("USER",data,5 );
-			
+
 		}
-	
+
+
+		//디자이너 회원 가입 
 		else if(!strcmp(command[0],"sid")){
 			//DB 입력 
 			for(i=0;i<6;i ++)
 				sprintf(data[i],"%s",command[i+1]);
 			if(!strcmp(data[5],"zzzz"))
 				sprintf(data[5],"");
-				
+
 			DBinsert("DESIGNER",data,6);
 		}
 
@@ -185,20 +189,21 @@ void *clnt_connection(void* arg){
 #endif
 			clnt_con[i] = 0;
 			break;
-		}
-	}
 
-	cntNum--;
+
+		}
+
+		cntNum--;
 #ifdef _DEBUG
-	printf("******Replace Clients*********\n Sector : Socket\n");
-	for(i=0;i < MAX_CLIENT; i++)
-		printf("%d : %d\n",i,clnt_con[i]);
+		printf("******Replace Clients*********\n Sector : Socket\n");
+		for(i=0;i < MAX_CLIENT; i++)
+			printf("%d : %d\n",i,clnt_con[i]);
 #endif	
 
 
-	close(sock);	
+		close(sock);	
 
-	return 0;
+		return 0;
+	}
+
 }
-
-
