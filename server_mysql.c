@@ -41,7 +41,7 @@ int DBinsert(char* table , char data[][100], int nData){
 	printf("%s",query);
 
 	
-	fflush(stdin);
+	fflush(stdout);
 	query_stat = mysql_query(connection,query);
 
 
