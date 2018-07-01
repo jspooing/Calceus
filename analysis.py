@@ -3,7 +3,7 @@ import numpy as np
 
 def run():
     # File Input
-    streamf=open('stream.txt', 'r')
+    streamf=open('/home/chc/calceus/datastream/stream.txt', 'r')
     data = [int(num) for num in streamf.read().split()]
     streamf.close()
 
@@ -40,7 +40,7 @@ def run():
 
     print(out_l+out_r)
 
-    f=open('value.txt', 'w')
+    f=open('/home/chc/calceus/datastream/value.txt', 'w')
     f.write(' '.join(str(out_l)))
     f.write(' '.join(str(out_r)))
     f.close()

@@ -147,7 +147,7 @@ void *clnt_connection(void* arg){
 
 			//로그인 정보 조회
 			i = checkLogin(command[1],command[2]);
-			
+
 			sprintf(uid,"%s",command[1]);
 			sprintf(buf,"%d",i);	
 			str_len = strlen(buf);
@@ -183,12 +183,6 @@ void *clnt_connection(void* arg){
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
 
-			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
-				printf("t_testBackend err\n");
-			}
-
-
-
 		}	
 		else if(!strcmp(command[0],"tst")){
 
@@ -216,16 +210,26 @@ void *clnt_connection(void* arg){
 
 
 				inputStream(pr_data,5);
+
+
+
 			}
 
 
-			if(pthread_create(&t_tBend,NULL,t_testBackend,NULL)<0){
-				printf("t_testBackend err\n");
-			}
 
 
 			write(sock,"dbend\n",sizeof("dbend\n"));
 			printf ("send: dbend\n");
+
+			system("python analysis.py");
+
+
+			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
+				printf("t_testBackend err\n");
+			}
+
+
+
 
 		}
 

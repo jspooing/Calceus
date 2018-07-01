@@ -42,29 +42,46 @@ int inputStream(int* data,int num){
 
 
 void* t_testBackend(void *data){
-		
-		char* id = (char *)data;
-		
-		FILE *fp;
-		int val[5];
-		char ilist[3][100];
-		int i;
-		
 
-		fp= fopen(STREAM_VAL,"r");
-		
+	char* id = (char *)data;
+
+	FILE *fp;
+	int lval[5];
+	int rval[5];
+	char ilist[3][100];
+	int i;
+
+	
+	printf("Backend running...\n");
+
+	while(1){	
+		if(access(STREAM_VAL,F_OK)==0)
+			break;
+	}
+
+	system("sed -i 's/ //g' /home/chc/calceus/datastream/value.txt");
+
+	fp= fopen(STREAM_VAL,"r");
 
 
-		for(i=0; i < 5 ; i ++)
-			fscanf(fp,"%d\n",&val[i]);
-		
-		
-		sprintf(ilist[0],"%s",id);
-		sprintf(ilist[1],"%d",val[0]);
-		sprintf(ilist[2],"-1");
-			
-		DBinsert("USER_TEST",ilist,3);
 
-		return;
+	
+
+	
+	fscanf(fp,"[%d,%d,%d,%d,%d]",&lval[0],&lval[1],&lval[2],&lval[3],&lval[4]);
+
+	fscanf(fp,"[%d,%d,%d,%d,%d]",&rval[0],&rval[1],&rval[2],&rval[3],&rval[4]);
+	
+	printf("read : %d ~ %d\n",lval[0],rval[4]);
+
+	sprintf(ilist[0],"%s",id);
+	sprintf(ilist[1],"%d",rval[0]);
+	sprintf(ilist[2],"-1");
+
+	DBinsert("USER_TEST",ilist,3);
+	system("rm /home/chc/calceus/stream/value.txt");
+	system("rm /home/chc/calceus/stream/stream.txt");
+
+	return;
 
 }
