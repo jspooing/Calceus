@@ -176,6 +176,9 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
+		
+			printf("TEST CASE CORRECT (1,0) : (%d,%d)\n",DBcheck("USER","User_id","hc"),DBcheck("USER","User_id","a4a"));
+
 
 		}	
 		else if(!strcmp(command[0],"tst")){
