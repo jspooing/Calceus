@@ -161,24 +161,18 @@ void *clnt_connection(void* arg){
 			//DB 입력
 
 
-			for(i=0; i <5; i++){
+			for(i=0; i <7; i++){
 				sprintf(data[i],"%s",command[i+1]);
 			}
-			DBinsert("USER",data,5 );
+			if(!strcmp(data[6],"zzzz"))
+				sprintf(data[6],"");
+
+
+			DBinsert("USER",data,7 );
 
 		}
 
 
-		//디자이너 회원 가입 
-		else if(!strcmp(command[0],"sid")){
-			//DB 입력 
-			for(i=0;i<6;i ++)
-				sprintf(data[i],"%s",command[i+1]);
-			if(!strcmp(data[5],"zzzz"))
-				sprintf(data[5],"");
-
-			DBinsert("DESIGNER",data,6);
-		}
 
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
