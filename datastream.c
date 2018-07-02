@@ -79,8 +79,8 @@ void* t_testBackend(void *data){
 	sprintf(ilist[2],"-1");
 
 	DBinsert("USER_TEST",ilist,3);
-	system("rm /home/chc/calceus/stream/value.txt");
-	system("rm /home/chc/calceus/stream/stream.txt");
+	system("rm /home/chc/calceus/datastream/value.txt");
+	system("rm /home/chc/calceus/datastream/stream.txt");
 
 	return;
 
