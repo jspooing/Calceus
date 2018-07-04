@@ -176,8 +176,49 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"test")){
 			write(sock,"test start!",12);
-		
-			printf("TEST CASE CORRECT (1,0) : (%d,%d)\n",DBcheck("USER","User_id","hc"),DBcheck("USER","User_id","a4a"));
+
+			for(i=0; i < 10;i++){
+				memset(message,0x00,sizeof(message));
+				str_len = recv(sock,message,BUFSIZE,0);	
+
+				printf("received : %s   ",message);
+
+
+				if(!strcmp(command[0],""))
+					str_len = strlen(message);
+
+				ptr = strtok(message, "^");
+				j=0;
+				while(ptr != NULL){
+					command[j] = ptr;
+					ptr = strtok(NULL, "^");
+					j++;
+					if(j > 20)break;
+				}
+				for(j=0;j<5;j++){
+					sscanf(command[j],"%d",&pr_data[j]);
+				}
+
+
+				inputStream(pr_data,5);
+
+
+
+			}
+
+
+
+
+			write(sock,"dbend\n",sizeof("dbend\n"));
+			printf ("send: dbend\n");
+
+
+			system("python /home/chc/calceus/analysis.py");
+
+			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
+				printf("t_testBackend err\n");
+			}
+
 
 
 		}	
@@ -218,7 +259,7 @@ void *clnt_connection(void* arg){
 			write(sock,"dbend\n",sizeof("dbend\n"));
 			printf ("send: dbend\n");
 
-			system("python analysis.py");
+			system("python /home/chc/calceus/analysis.py");
 
 
 			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
@@ -228,6 +269,18 @@ void *clnt_connection(void* arg){
 
 
 
+		}
+
+		else if (!strcmp(command[0],"order")){
+			
+			sprintf(data[0],"%s",uid);
+			sprintf(data[1],"");
+
+			for(i=1 ; i < 6; i ++)
+			sprintf(data[i+1],"%s",command[i]);
+
+			DBinsert("DU_MATCH",data,7);
+			
 		}
 
 		else 
