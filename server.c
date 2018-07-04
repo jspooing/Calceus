@@ -221,7 +221,7 @@ void *clnt_connection(void* arg){
 			write(sock,"dbend\n",sizeof("dbend\n"));
 			printf ("send: dbend\n");
 
-			system("python analysis.py");
+			system("python /home/chc/calceus/analysis.py");
 
 
 			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
