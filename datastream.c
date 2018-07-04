@@ -48,7 +48,7 @@ void* t_testBackend(void *data){
 	FILE *fp;
 	int lval[5];
 	int rval[5];
-	char ilist[3][100];
+	char ilist[12][100];
 	int i;
 
 	
@@ -72,16 +72,45 @@ void* t_testBackend(void *data){
 
 	fscanf(fp,"[%d,%d,%d,%d,%d]",&rval[0],&rval[1],&rval[2],&rval[3],&rval[4]);
 	
-	printf("read : %d ~ %d\n",lval[0],rval[4]);
 
 	sprintf(ilist[0],"%s",id);
-	sprintf(ilist[1],"%d",rval[0]);
-	sprintf(ilist[2],"-1");
+	
+	for(i=0; i<5; i ++){
+		sprintf(ilist[i+1],"%d",lval[i]);
+	}
+	for(i=0; i < 5 ; i ++){
+		sprintf(ilist[i+6],"%d",rval[i]);
+	}
 
-	DBinsert("USER_TEST",ilist,3);
-	system("rm /home/chc/calceus/stream/value.txt");
-	system("rm /home/chc/calceus/stream/stream.txt");
+	if(DBcheck("USER_TEST","tUser_id",id))
+		printf("renew data..\n");
+	
+	DBinsert("USER_TEST",ilist,11);
+//	system("rm /home/chc/calceus/datastream/value.txt");
+//	system("rm /home/chc/calceus/datastream/stream.txt");
 
 	return;
 
+}
+
+
+int getImg(int sock,char* buf,int buf_size){
+
+	char chkbuf;
+	int fd;
+	int str_len;
+
+	fd = open("/home/chc/server/log/log.txt",O_RDONLY);
+	if(fd == -1)
+		printf("File Open err .. \n");
+	while(read(fd,buf,buf_size)){
+		str_len = strlen(buf);
+		buf[str_len++] = '\n';
+		buf[str_len] = '\0';
+		write(sock,buf,str_len);
+		printf("%s",buf);
+	}
+	close(fd);
+
+	return 0;
 }
