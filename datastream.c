@@ -86,9 +86,10 @@ void* t_testBackend(void *data){
 		printf("renew data..\n");
 	
 	DBinsert("USER_TEST",ilist,11);
-//	system("rm /home/chc/calceus/datastream/value.txt");
-//	system("rm /home/chc/calceus/datastream/stream.txt");
-
+	system("rm /home/chc/calceus/datastream/value.txt");
+	system("rm /home/chc/calceus/datastream/stream.txt");
+	system("rm /home/chc/calceus/datastream/content.txt");
+	
 	return;
 
 }
@@ -99,14 +100,14 @@ int getImg(int sock,char* buf,int buf_size){
 	char chkbuf;
 	int fd;
 	int str_len;
+	int i ;
 
-	fd = open("/home/chc/server/log/log.txt",O_RDONLY);
+
+	fd = open("/home/chc/calceus/datastream/result.bmp",O_RDONLY);
 	if(fd == -1)
 		printf("File Open err .. \n");
 	while(read(fd,buf,buf_size)){
 		str_len = strlen(buf);
-		buf[str_len++] = '\n';
-		buf[str_len] = '\0';
 		write(sock,buf,str_len);
 		printf("%s",buf);
 	}
