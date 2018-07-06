@@ -175,14 +175,12 @@ void *clnt_connection(void* arg){
 
 
 		else if(!strcmp(command[0],"test")){
-			write(sock,"test start!",12);
-			system("convert /home/chc/calceus/datastream/result.png -type truecolor /home/chc/calceus/datastream/result.bmp");
-			getImg(sock,buf,BUFSIZE);
-
-
+			//write(sock,"test start!",12);
+			DBselect_match(buf,"mD_id","bb' or mD_id = '",8);
+			write(sock,buf,BUFSIZE);
 		}
 
-		else if(!strcmp(command[0],"img")){
+		else if(!strcmp(command[0],"img1")){
 			system("convert /home/chc/calceus/datastream/result.png /home/chc/calceus/datastream/result.bmp");
 			getImg(sock,buf,BUFSIZE);
 
