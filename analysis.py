@@ -1,46 +1,50 @@
+from testcase import L_testcase as lt
+from testcase import R_testcase as rt
 import matplotlib.pyplot as plt
 import numpy as np
 
 def run():
-    # File Input
-    streamf=open('/home/chc/calceus/datastream/stream.txt', 'r')
-    data = [int(num) for num in streamf.read().split()]
-    streamf.close()
+    loc_LFlist = []
+    loc_RFlist = []
+    tmp_l = [0,0,0,0,0]
+    tmp_r = [0,0,0,0,0]
+    tstIndex = 10
 
-    #print(len(data))
-    #print(data)
+    for i in range(1, tstIndex):
+        loc_LFlist.append(lt())
+        loc_RFlist.append(rt())
 
-    # The List as a stack for press value
-    tmp_l = [0, 0, 0, 0, 0]
-    tmp_r = [0, 0, 0, 0, 0]
-    IndexOfData = len(data) / 10
-
-    for j in range(0, int(len(data)/10)):
+    try:
         for i in range(0, 5):
-            tmp_l[i]+=data[i+(j*10)]
-            tmp_r[i]+=data[i+((j*10)+5)]
+            for j in range(0, len(loc_LFlist)):
+                tmp_l[i]+=loc_LFlist[j][i]
+                tmp_r[i]+=loc_RFlist[j][i]
+    except:
+        pass
 
-    #print(tmp_l, tmp_r)
+    print(loc_LFlist)
+    print(loc_RFlist)
+
     print("=======================")
 
     for i in range(0, len(tmp_l)):
-        tmp_l[i]/=IndexOfData
-        tmp_r[i]/=IndexOfData
+        tmp_l[i]/=tstIndex
+        tmp_r[i]/=tstIndex
 
-    #print("Average of LFoot : ", tmp_l)
-    #print("Average of RFoot : ", tmp_r)
+    print("Average of LFoot : ", tmp_l)
+    print("Average of RFoot : ", tmp_r)
 
-    out_l=[]
-    out_r=[]
+    out_l = []
+    out_r = []
 
-    for tmp_ls in range(0,len(tmp_l)):
-       out_l.append(int(tmp_l[tmp_ls]))
-    for tmp_rs in range(0,len(tmp_r)):
-       out_r.append(int(tmp_r[tmp_rs]))
+    for tmp_ls in range(0, len(tmp_l)):
+        out_l.append(int(tmp_l[tmp_ls]))
+    for tmp_rs in range(0, len(tmp_r)):
+        out_r.append(int(tmp_r[tmp_rs]))
 
-    print(out_l+out_r)
+    print(out_l + out_r)
 
-    f=open('/home/chc/calceus/datastream/value.txt', 'w')
+    f = open('value.txt', 'w')
     f.write(' '.join(str(out_l)))
     f.write(' '.join(str(out_r)))
     f.close()
