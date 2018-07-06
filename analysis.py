@@ -1,5 +1,7 @@
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 import numpy as np
+import matplotlib.pyplot as plt
 
 def run():
     # File Input
@@ -65,7 +67,8 @@ def visualize(pressure):
 
     plt.ylabel('Pressure Value')
     plt.xlabel('The pressure of Foot')
-    plt.savefig('result.png')
+    plt.savefig('/home/chc/calceus/datastream/result.png')
+
 
 def contents(data):
     info1 = '''Your result ~~~ '''+'\n'
@@ -76,7 +79,7 @@ def contents(data):
         info+=("Right Foot P"+str(i)+" : "+str(int(data[i+5]))+'\n')
 
     result=info1+info
-    out_text=open('content.txt', 'w')
+    out_text=open('/home/chc/calceus/datastream/content.txt', 'w')
     out_text.write(result)
     out_text.close()
 
