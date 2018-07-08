@@ -302,8 +302,8 @@ void *clnt_connection(void* arg){
 		else if(!strcmp(command[0],"ir")){
 			
 			
-			DBselect_match(buf,"S_ORDER","o_num",command[1],5);
-			write(sock,buf,BUFSIZE);
+			DBselect_match(buf,"REQUST","o_num",command[1],5);
+			write(sock,buf,500);
 		
 		}
 

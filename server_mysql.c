@@ -202,8 +202,6 @@ int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 	sql_result = mysql_store_result(connection);
 
 
-	printf("sql_result : loaded \n");
-
 	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
 
 		for(i=0; i < dnum; i++)
