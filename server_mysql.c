@@ -19,7 +19,7 @@ typedef struct _Matchtable{
 	char sex;
 }Match;
 
-int DBinsert(char* table , char data[][100], int nData){
+int DBinsert(char* table , char data[][200], int nData){
 
 	MYSQL *connection = NULL, conn;
 	MYSQL_RES *sql_result;
@@ -80,7 +80,7 @@ int checkLogin(char id[15],char pw[15])
 	}
 
 
-	sprintf(query, "select * from USER where User_id = '%s'", id);
+	sprintf(query, "select * from USER where id = '%s'", id);
 
 	query_stat = mysql_query(connection, query);
 

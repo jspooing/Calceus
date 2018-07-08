@@ -110,7 +110,7 @@ void *clnt_connection(void* arg){
 	int* pSock = (int*) arg;
 	int sock = *pSock;
 	char* command[20];
-	char data[12][100];
+	char data[12][200];
 	char* ptr;
 	int str_len;
 	char message[BUFSIZE];
@@ -159,16 +159,26 @@ void *clnt_connection(void* arg){
 		// 유저 회원가입 
 		else if(!strcmp(command[0],"siu")){
 			//DB 입력
-
-
-			for(i=0; i <7; i++){
+			
+			
+			for(i=0; i <6; i++){
 				sprintf(data[i],"%s",command[i+1]);
 			}
-			if(!strcmp(data[6],"zzzz"))
-				sprintf(data[6],"");
+				DBinsert("USER",data,6);
+	
+			if(!strcmp(command[6],"2")){
+		
 
+				sprintf(data[0],"%s",command[1]);
+			    sprintf(data[1],"%s",command[7]);
+				sprintf(data[2],"%s",command[8]);
+				
+				if(!strcmp(data[1],"zzzz"))
+				sprintf(data[1],"");
 
-			DBinsert("USER",data,7 );
+			
+				DBinsert("D_DESIGNER",data,3);
+			}
 
 		}
 
@@ -189,7 +199,7 @@ void *clnt_connection(void* arg){
 		else if(!strcmp(command[0],"val")){
 
 
-			write(sock,"test start!#ddd#d#d#d#d#d#d#d#d#d\n",12);
+			write(sock,"test start!#ddd#d#d#d#d#d#d#d#d#d\n",sizeof("test start!#ddd#d#d#d#d#d#d#d#d#d\n"));
 			printf("test start!#ddd#d#d#d#d#d#d#d#d#d\n");
 		}
 
