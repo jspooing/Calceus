@@ -175,6 +175,10 @@ void *clnt_connection(void* arg){
 				
 				if(!strcmp(data[1],"zzzz"))
 				sprintf(data[1],"");
+				
+				if(!strcmp(data[2],"zzzz"))
+				sprintf(data[2],"");
+
 
 			
 				DBinsert("D_DESIGNER",data,3);
@@ -186,7 +190,7 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"test")){
 			//write(sock,"test start!",12);
-			DBselect_match(buf,"mD_id","bb' or mD_id = '",8);
+			sprintf(buf,"%d",getMAX("REQUST","r_num")+1);
 			write(sock,buf,BUFSIZE);
 		}
 
@@ -254,16 +258,58 @@ void *clnt_connection(void* arg){
 
 		else if (!strcmp(command[0],"order")){
 
-			sprintf(data[0],"%s",uid);
-			sprintf(data[1],"");
+			sprintf(data[0],"%d",getMAX("S_ORDER","o_num")+1);
+			sprintf(data[1],"%s",uid);
+			sprintf(data[2],"");
 
 			for(i=1 ; i < 6; i ++)
-				sprintf(data[i+1],"%s",command[i]);
+				sprintf(data[i+2],"%s",command[i]);
 
-			DBinsert("DU_MATCH",data,7);
+
+			//주문에서 가격대를 설정하려면 여기를 바꾸면 됩니다. 
+
+			sprintf(data[8],"0");
+			sprintf(data[9],"0");
+			
+
+
+			//////////////////////////////////////////////
+
+
+
+			DBinsert("S_ORDER",data,10);
 
 		}
 
+		else if(!strcmp(command[0],"req")){
+
+			sprintf(data[0],"%d",getMAX("REQUST","r_num")+1);
+			printf("flag : %s",data[0]);
+
+			for(i=1;i<5;i++)
+				sprintf(data[i],"%s",command[i]);
+
+			DBinsert("REQUST",data,5);
+		}
+
+
+		else if(!strcmp(command[0],"io")){
+		
+			DBselect_match(buf,"S_ORDER","u_id",uid,10);
+			write(sock,buf,BUFSIZE);
+		
+		}
+		else if(!strcmp(command[0],"ir")){
+			
+			
+			DBselect_match(buf,"S_ORDER","o_num",command[1],5);
+			write(sock,buf,BUFSIZE);
+		
+		}
+
+		else if(!strcmp(command[0],"buy")){
+			sbuy(command[1],command[2]);
+		}
 		else 
 
 			write(sock,"Undefined commnad!",sizeof("Undefined command!"));		

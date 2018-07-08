@@ -160,7 +160,7 @@ int DBcheck(char * table, char * column, char * value){
 
 }
 
-int DBselect_match(char * buf,char *column ,char* value, int dnum){
+int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 	MYSQL *connection  = NULL, conn;
 	MYSQL_RES *sql_result;
 	MYSQL_ROW sql_row;
@@ -183,7 +183,7 @@ int DBselect_match(char * buf,char *column ,char* value, int dnum){
 		return -1;
 	}
 
-	sprintf(query,"select * from DU_MATCH where %s = '%s'",column,value);
+	sprintf(query,"select * from %s where %s = '%s'",table,column,value);
 
 	printf("%s",query);
 	fflush(stdout);
@@ -204,13 +204,6 @@ int DBselect_match(char * buf,char *column ,char* value, int dnum){
 
 	printf("sql_result : loaded \n");
 
-
-
-
-
-
-
-
 	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
 
 		for(i=0; i < dnum; i++)
@@ -225,4 +218,86 @@ int DBselect_match(char * buf,char *column ,char* value, int dnum){
 	
 	printf("%s",buf);
 	return 0;
+}
+
+int getMAX(char * table ,char * col){
+
+	MYSQL *connection  = NULL, conn;
+	MYSQL_RES *sql_result;
+	MYSQL_ROW sql_row;
+	int query_stat;
+	int stat =0;
+	char query[255];
+	char correct[15];
+
+	mysql_init(&conn);
+	connection = mysql_real_connect(&conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 3306, (char *)NULL, 0);
+
+	if(connection == NULL)
+	{
+		fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+
+	sprintf(query, "select max(%s) from %s", col,table);
+
+	query_stat = mysql_query(connection, query);
+
+	if(query_stat != 0)
+	{
+		fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+
+
+	sql_result = mysql_store_result(connection);
+
+
+	sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL)return 0;
+
+	sprintf(correct,"%s",sql_row[0]);
+	return atoi(correct);
+
+	mysql_free_result(sql_result); 
+	mysql_close(connection);
+
+}
+
+int sbuy(char* num,char * id){
+
+	MYSQL *connection = NULL, conn;
+	MYSQL_RES *sql_result;
+	MYSQL_ROW sql_row;
+	int query_stat;
+	char query[255];
+	int i;
+
+	mysql_init(&conn);
+	connection= mysql_real_connect(&conn,DB_HOST,DB_USER,DB_PASS,DB_NAME,
+			3306,(char *)NULL, 0 );
+
+	if(connection == NULL)
+	{
+		fprintf(stderr, "Mysql connection error : %s",mysql_error(&conn));
+		return -1;
+	}
+
+	sprintf(query,"update S_ORDER set d_id = '%s' where o_num = %s ",id,num );
+
+
+	printf("%s",query);
+
+
+	fflush(stdout);
+	query_stat = mysql_query(connection,query);
+
+
+	mysql_close(connection);
+	return 1;
+
+
 }
