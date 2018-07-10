@@ -95,8 +95,9 @@ void* t_testBackend(void *data){
 		printf("renew data..\n");
 	
 	DBinsert("TEST",ilist,11);
+
 	system("rm /home/chc/calceus/value.txt");
-	system("rm /home/chc/calceus/datastream/stream.txt");
+//	system("rm /home/chc/calceus/datastream/stream.txt");
 	system("rm /home/chc/calceus/datastream/content.txt");
 	
 	return;
