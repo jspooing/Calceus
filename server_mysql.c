@@ -215,6 +215,7 @@ int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 
 		fflush(stdout);
 	}
+	CHOP(buf);
 	sprintf(buf,"%s\n",buf);	
 	printf("%s",buf);
 	return 0;
