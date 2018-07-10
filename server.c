@@ -208,8 +208,16 @@ void *clnt_connection(void* arg){
 	
 		else if(!strcmp(command[0],"designer")){
 			
+
+			
 			memset(buf,0x00,sizeof(buf));
 
+
+			if(!strcmp(uid,"js")){
+
+				sprintf(buf,"no\n",4);
+			}
+			else 
 			sprintf(buf,"d_name#99999#08-03,2018#aa#bb#cc#dd\n",sizeof(buf));
 		
 			write(sock,buf,sizeof(buf));
@@ -302,6 +310,20 @@ void *clnt_connection(void* arg){
 
 
 			DBinsert("S_ORDER",data,10);
+
+		}
+
+		else if(!strcmp(command[0],"user")){
+
+			if(DBcheck("S_ORDER","d_id","")){
+
+				DBselect_match(buf,"S_ORDER","d_id","",10);
+				write(sock,buf,BUFSIZE);
+			}
+
+			else 
+				write(sock,"no\n",4);
+
 
 		}
 

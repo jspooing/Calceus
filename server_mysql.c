@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 #include"/usr/include/mysql/mysql.h"
 
@@ -70,6 +71,7 @@ int checkLogin(char id[15],char pw[15])
 	int stat =0;
 	char query[255];
 	char correct[15];
+	int type;
 
 	mysql_init(&conn);
 	connection = mysql_real_connect(&conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 3306, (char *)NULL, 0);
@@ -101,14 +103,17 @@ int checkLogin(char id[15],char pw[15])
 	if(sql_row == NULL)return 0;
 
 	sprintf(correct,"%s",sql_row[2]);
+	type = (int)sql_row[5];
 
 	mysql_free_result(sql_result); 
 	mysql_close(connection);
+	
 
+	type = atoi(type);
 
 	if(!strcmp(pw,correct)){
 		printf("login sucess \n");
-		return 1;
+		return type;
 	}
 	else{
 		printf("worng pw \n");
