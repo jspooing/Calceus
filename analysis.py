@@ -76,7 +76,7 @@ def contents(data):
         info+=("Right Foot P"+str(i)+" : "+str(int(data[i+5]))+'\n')
 
     result=info1+info
-    out_text=open('content.txt', 'w')
+    out_text=open('/home/chc/calceus/datastream/content.txt', 'w')
     out_text.write(result)
     out_text.close()
 
