@@ -67,7 +67,7 @@ def visualize(pressure):
 
     plt.ylabel('Pressure Value')
     plt.xlabel('The pressure of Foot')
-    plt.savefig('/home/chc/calceus/datastream/result.png')
+    plt.savefig('/home/chc/calceus/web/fserver/myapp/static/result.png')
 
 
 def contents(data):
