@@ -46,8 +46,9 @@ int DBinsert(char* table , char data[][200], int nData){
 	CHOP(query);
 
 	sprintf(query,"%s)",query);
-
-	printf("%s",query);
+	
+	printf("DBinset : ");
+	printf("%s\n",query);
 
 
 	fflush(stdout);
@@ -185,7 +186,7 @@ int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 
 	sprintf(query,"select * from %s where %s = '%s'",table,column,value);
 
-	printf("%s",query);
+	printf("%s\n",query);
 	fflush(stdout);
 
 	query_stat = mysql_query(connection,query);
@@ -205,15 +206,16 @@ int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
 
 		for(i=0; i < dnum; i++)
-			sprintf(buf,"%s%s/",buf,sql_row[i]);	
-		sprintf(buf,"%s#",buf);
+			sprintf(buf,"%s%s#",buf,sql_row[i]);
+		CHOP(buf);
+		sprintf(buf,"%s/",buf);
 		
 
 
 
 		fflush(stdout);
 	}
-	
+	sprintf(buf,"%s\n",buf);	
 	printf("%s",buf);
 	return 0;
 }

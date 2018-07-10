@@ -7,8 +7,9 @@
 
 #define NUM_DATA 5
 #define STREAM_PATH "/home/chc/calceus/datastream/stream.txt"
-#define STREAM_VAL "/home/chc/calceus/datastream/value.txt"
-#define CHPN(x) x[strlen(x)] = '\n'
+#define STREAM_VAL "/home/chc/calceus/value.txt"
+#define CHOP(X) X[strlen(X)-1] = NULL
+#define CHPN(X) X[strlen(X)] = '\n'
 
 int inputStream(int* data,int num){
 	
@@ -48,7 +49,8 @@ void* t_testBackend(void *data){
 	FILE *fp;
 	int lval[5];
 	int rval[5];
-	char ilist[12][100];
+	char ilist[12][200];
+	char buf[100];
 	int i;
 
 	
@@ -59,7 +61,7 @@ void* t_testBackend(void *data){
 			break;
 	}
 
-	system("sed -i 's/ //g' /home/chc/calceus/datastream/value.txt");
+	system("sed -i 's/ //g' /home/chc/calceus/value.txt");
 
 	fp= fopen(STREAM_VAL,"r");
 
@@ -72,7 +74,6 @@ void* t_testBackend(void *data){
 
 	fscanf(fp,"[%d,%d,%d,%d,%d]",&rval[0],&rval[1],&rval[2],&rval[3],&rval[4]);
 	
-
 	sprintf(ilist[0],"%s",id);
 	
 	for(i=0; i<5; i ++){
@@ -82,11 +83,19 @@ void* t_testBackend(void *data){
 		sprintf(ilist[i+6],"%d",rval[i]);
 	}
 
-	if(DBcheck("USER_TEST","tUser_id",id))
+	memset(buf,0x00,sizeof(buf));
+	for(i=1; i < 11; i++)
+		sprintf(buf,"%s%s#",buf,ilist[i]);
+	CHOP(buf);
+	sprintf(buf,"%s\n",buf);
+
+	printf("ilist : %s\n",buf);
+
+	if(DBcheck("TEST","id",id))
 		printf("renew data..\n");
 	
-	DBinsert("USER_TEST",ilist,11);
-	system("rm /home/chc/calceus/datastream/value.txt");
+	DBinsert("TEST",ilist,11);
+	system("rm /home/chc/calceus/value.txt");
 	system("rm /home/chc/calceus/datastream/stream.txt");
 	system("rm /home/chc/calceus/datastream/content.txt");
 	

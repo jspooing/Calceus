@@ -190,7 +190,12 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"test")){
 			//write(sock,"test start!",12);
-			sprintf(buf,"%d",getMAX("REQUST","r_num")+1);
+			
+			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
+				printf("t_testBackend err\n");
+			}
+
+
 			write(sock,buf,BUFSIZE);
 		}
 
@@ -202,7 +207,9 @@ void *clnt_connection(void* arg){
 		}
 		else if(!strcmp(command[0],"val")){
 
-
+			
+			DBselect_match(buf,"TEST","id",uid,10);
+			printf("%s\n",buf);
 			write(sock,"test start!#ddd#d#d#d#d#d#d#d#d#d\n",sizeof("test start!#ddd#d#d#d#d#d#d#d#d#d\n"));
 			printf("test start!#ddd#d#d#d#d#d#d#d#d#d\n");
 		}
