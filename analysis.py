@@ -50,19 +50,19 @@ def run():
     return tmp_l+tmp_r
 
 def visualize(pressure):
-    type=['LFoot1', 'LFoot2', 'LFoot3', 'LFoot4', 'LFoot5',
-          'RFoot1', 'RFoot2', 'RFoot3', 'RLFoot4', 'RFoot5']
+    type=['LF1', 'LF2', 'LF3', 'LF4', 'LF5',
+          'RF1', 'RF2', 'RF3', 'RL4', 'RF5']
     data=pressure
 
-    fig = plt.figure(figsize=(8, 4))
+    fig = plt.figure(figsize=(8, 5))
     ax = fig.add_subplot(111)
 
     pos = np.arange(10)
-    rects = plt.bar(pos, data, align='center', width=0.5)
+    rects = plt.bar(pos, data, align='center', width=0.5, color='#819FF7')
     plt.xticks(pos, type)
 
     for i, rect in enumerate(rects):
-        ax.text(rect.get_x() + rect.get_width() / 2.0, 0.95 * rect.get_height(), str(int(data[i])) + '%',
+        ax.text(rect.get_x() + rect.get_width() / 2.0, 1.01 * rect.get_height(), str(int(data[i])) + '%',
                 ha='center')
 
     plt.ylabel('Pressure Value')

@@ -9,3 +9,6 @@ int DBselect_match(char * buf ,char * table,char *,char*,int);
 int sqltest();
 int getMAX(char * ,char *);
 int sbuy(char *, char *);
+void sendresult(int);
+
+
