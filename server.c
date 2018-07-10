@@ -205,58 +205,75 @@ void *clnt_connection(void* arg){
 
 
 		}
-		else if(!strcmp(command[0],"val")){
-
+	
+		else if(!strcmp(command[0],"designer")){
 			
-			DBselect_match(buf,"TEST","id",uid,10);
-			printf("%s\n",buf);
-			write(sock,"test start!#ddd#d#d#d#d#d#d#d#d#d\n",sizeof("test start!#ddd#d#d#d#d#d#d#d#d#d\n"));
-			printf("test start!#ddd#d#d#d#d#d#d#d#d#d\n");
+			memset(buf,0x00,sizeof(buf));
+
+			sprintf(buf,"d_name#99999#08-03,2018#aa#bb#cc#dd\n",sizeof(buf));
+		
+			write(sock,buf,sizeof(buf));
+
+
+		}
+
+		else if(!strcmp(command[0],"val")){
+				
+			sendresult(sock);
+			
 		}
 
 		else if(!strcmp(command[0],"tst")){
 
-			for(i=0; i < 10;i++){
-				memset(message,0x00,sizeof(message));
-				str_len = recv(sock,message,BUFSIZE,0);	
-
-				printf("received : %s   ",message);
-
-
-				if(!strcmp(command[0],""))
-					str_len = strlen(message);
-
-				ptr = strtok(message, "^");
-				j=0;
-				while(ptr != NULL){
-					command[j] = ptr;
-					ptr = strtok(NULL, "^");
-					j++;
-					if(j > 20)break;
-				}
-				for(j=0;j<5;j++){
-					sscanf(command[j],"%d",&pr_data[j]);
-				}
-
-
-				inputStream(pr_data,5);
-
-
-
-			}
-
-
-
-
-			write(sock,"dbend\n",sizeof("dbend\n"));
-			printf ("send: dbend\n");
-
-			system("python /home/chc/calceus/analysis.py");
+//			for(i=0; i < 10;i++){
+//				memset(message,0x00,sizeof(message));
+//				str_len = recv(sock,message,BUFSIZE,0);	
+//
+//				printf("received : %s   ",message);
+//
+//
+//				if(!strcmp(command[0],""))
+//					str_len = strlen(message);
+//
+//				ptr = strtok(message, "^");
+//				j=0;
+//				while(ptr != NULL){
+//					command[j] = ptr;
+//					ptr = strtok(NULL, "^");
+//					j++;
+//					if(j > 20)break;
+//				}
+//				for(j=0;j<5;j++){
+//					sscanf(command[j],"%d",&pr_data[j]);
+//				}
+//
+//
+//				inputStream(pr_data,5);
+//
+//
+//
+//			}
+//
 
 
+
+					system("python /home/chc/calceus/analysis.py");
+			
 			if(pthread_create(&t_tBend,NULL,t_testBackend,(void *)uid)<0){
 				printf("t_testBackend err\n");
 			}
+
+
+			while(1){
+
+				if(access("/home/chc/calceus/datastream/content.txt",F_OK)==0)
+				break;
+			}
+			
+	write(sock,"dbend\n",sizeof("dbend\n"));
+			printf ("send: dbend\n");
+
+
 
 
 
