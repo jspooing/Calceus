@@ -212,16 +212,15 @@ void *clnt_connection(void* arg){
 			
 			memset(buf,0x00,sizeof(buf));
 
-
-			if(!strcmp(uid,"js")){
-
-				sprintf(buf,"no\n",4);
-			}
-			else 
-			sprintf(buf,"d_name#99999#08-03,2018#aa#bb#cc#dd\n",sizeof(buf));
 		
-			write(sock,buf,sizeof(buf));
+			if(DBcheck_designer(uid)){
 
+				DBselect_designer(buf,uid);
+				write(sock,buf,BUFSIZE);
+			}
+
+			else 
+				write(sock,"no\n",4);
 
 		}
 
@@ -294,13 +293,12 @@ void *clnt_connection(void* arg){
 			sprintf(data[1],"%s",uid);
 			sprintf(data[2],"");
 
-			for(i=1 ; i < 6; i ++)
+			for(i=1 ; i < 7; i ++)
 				sprintf(data[i+2],"%s",command[i]);
 
 
 			//주문에서 가격대를 설정하려면 여기를 바꾸면 됩니다. 
-
-			sprintf(data[8],"0");
+			// 사실 p_min 값 프리미엄으로 써버림 ㅎㅎ 가격대 설정 않했읍 좋겠다
 			sprintf(data[9],"0");
 			
 
@@ -315,9 +313,9 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"user")){
 
-			if(DBcheck("S_ORDER","d_id","")){
+			if(DBcheck("S_ORDER","d_id",uid)){
 
-				DBselect_match(buf,"S_ORDER","d_id","",10);
+				DBselect_user(buf,uid);
 				write(sock,buf,BUFSIZE);
 			}
 
@@ -327,21 +325,25 @@ void *clnt_connection(void* arg){
 
 		}
 
-		else if(!strcmp(command[0],"req")){
-
+		else if(!strcmp(command[0],"match")){
+			//////////o_num 은 주문한놈 아이디 인겁니다 !! 
 			sprintf(data[0],"%d",getMAX("REQUST","r_num")+1);
 			printf("flag : %s",data[0]);
 
 			for(i=1;i<5;i++)
 				sprintf(data[i],"%s",command[i]);
 
-			DBinsert("REQUST",data,5);
+			sprintf(data[5],"%s",uid);
+
+			DBinsert("REQUST",data,6);
+			sbuy(command[1],command[2]);
+
 		}
 
 
-		else if(!strcmp(command[0],"io")){
+		else if(!strcmp(command[0],"list")){
 		
-			DBselect_match(buf,"S_ORDER","u_id",uid,10);
+			DBselect_olist(buf);
 			write(sock,buf,BUFSIZE);
 		
 		}
