@@ -4,6 +4,7 @@ from testcase import L_testcase as lt
 from testcase import R_testcase as rt
 import numpy as np
 import matplotlib.pyplot as plt
+from testcase import gyro, accel
 
 def run():
     loc_LFlist = []
@@ -26,6 +27,8 @@ def run():
 
 
     print("=======================")
+    print("Success to analysis.")
+    print("=======================")
 
     for i in range(0, len(tmp_l)):
         tmp_l[i]/=tstIndex
@@ -39,8 +42,6 @@ def run():
         out_l.append(int(tmp_l[tmp_ls]))
     for tmp_rs in range(0, len(tmp_r)):
         out_r.append(int(tmp_r[tmp_rs]))
-
-    print(out_l + out_r)
 
     f = open('value.txt', 'w')
     f.write(' '.join(str(out_l)))
@@ -67,25 +68,63 @@ def visualize(pressure):
 
     plt.ylabel('Pressure Value')
     plt.xlabel('The pressure of Foot')
-    plt.savefig('/home/chc/calceus/web/fserver/myapp/static/result.png')
+    plt.savefig('./result.png')
 
+def check_habit():
+    data=gyro()
+
+    if data < -19.9:
+        res = 'High Arch Foot type.'
+        return res
+
+    elif -19.9<=data<31.93:
+        res = 'Normal Arch Foot type.'
+        return res
+
+    elif data >= 31.93:
+        res = 'Flat Foot type.'
+        return res
+
+def check_speed():    
+    data = accel()
+    if 0.5<data<1.3:
+        return 'You have a Normal walking speed'
+    elif 0<data<=0.5:
+        return 'You have a faster walking speed than average'
+    elif data>=1.3:
+        return 'You have a slower walking speed than average'
 
 def contents(data):
-    info1 = '''Your result ~~~ '''+'\n'
+    info1 = '''Your walk test is as follows. '''+'\n'
     info=""
     for i in range(0, 5):
         info+=("Left Foot P"+str(i)+" : "+str(int(data[i]))+'\n')
     for i in range(0, 5):
         info+=("Right Foot P"+str(i)+" : "+str(int(data[i+5]))+'\n')
 
-    result=info1+info
-    out_text=open('/home/chc/calceus/datastream/content.txt', 'w')
+    
+    varOfLfoot = data[0] +data[1] +data[2] +data[3] +data[4]
+    varOfRfoot = data[5] +data[6] +data[7] +data[8] +data[9]
+
+    if varOfRfoot > varOfLfoot:
+        bal = 'Also, The weight is biased to the right foot.'
+    else:
+        bal = 'Also, The weight is biased to the left foot.'
+
+
+    sub0 = check_speed()
+    sub1 = ', and the type of foot is '+check_habit()+'\n'
+    sub2 = 'Now, You can get your own fit shoes!'+'\n'
+
+    result=info1+'\n'+info+'\n'+sub0+sub1+bal+'\n'+sub2
+
+    out_text=open('./content.txt', 'w')
     out_text.write(result)
     out_text.close()
 
 def execute(data):
-	visualize(data)
-	contents(data)
+    visualize(data)
+    contents(data)
 
 # Execute
 execute(run())
