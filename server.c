@@ -205,6 +205,14 @@ void *clnt_connection(void* arg){
 
 
 		}
+
+		else if(!strcmp(command[0],"click")){
+		
+			memset(buf,0x00,sizeof(buf));
+			DBselect_click(buf,command[1]);
+			write(sock,buf,sizeof(buf));
+
+		}
 	
 		else if(!strcmp(command[0],"designer")){
 			
@@ -336,7 +344,8 @@ void *clnt_connection(void* arg){
 			sprintf(data[5],"%s",uid);
 
 			DBinsert("REQUST",data,6);
-			sbuy(command[1],command[2]);
+			sbuy(command[1],uid);
+
 
 		}
 

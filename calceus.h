@@ -9,6 +9,7 @@ int getImg(int ,char *, int );
 int DBselect_match(char * buf ,char * table,char *,char*,int);
 int DBselect_user(char* buf, char* value);
 int DBselect_designer(char* buf, char* value);
+int DBselect_click(char* buf, char* id );
 int sqltest();
 int getMAX(char * ,char *);
 int sbuy(char *, char *);

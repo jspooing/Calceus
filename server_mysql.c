@@ -47,7 +47,7 @@ int DBinsert(char* table , char data[][200], int nData){
 	CHOP(query);
 
 	sprintf(query,"%s)",query);
-	
+
 	printf("DBinset : ");
 	printf("%s\n",query);
 
@@ -107,7 +107,7 @@ int checkLogin(char id[15],char pw[15])
 
 	mysql_free_result(sql_result); 
 	mysql_close(connection);
-	
+
 
 	type = atoi(type);
 
@@ -257,7 +257,7 @@ int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 			sprintf(buf,"%s%s#",buf,sql_row[i]);
 		CHOP(buf);
 		sprintf(buf,"%s/",buf);
-		
+
 
 
 
@@ -373,7 +373,7 @@ int DBselect_designer(char* buf,char* value){
 			sprintf(buf,"%s%s#",buf,sql_row[i]);
 		CHOP(buf);
 		sprintf(buf,"%s/",buf);
-		
+
 
 
 
@@ -485,6 +485,66 @@ int getMAX(char * table ,char * col){
 
 	mysql_free_result(sql_result); 
 	mysql_close(connection);
+
+}
+
+int DBselect_click(char* buf, char* id){
+	MYSQL *connection  = NULL, conn;
+	MYSQL_RES *sql_result;
+	MYSQL_ROW sql_row;
+
+	int query_stat;
+	int stat =0;
+	char query[255];
+	char correct[15];
+	int i;
+
+
+	printf("DB_select : ");
+	fflush(stdout);
+	mysql_init(&conn);
+	connection = mysql_real_connect(&conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 3306, (char *)NULL, 0);
+
+	if(connection == NULL)
+	{
+		fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+	sprintf(query,"select size,wide,color,o_detail  from S_ORDER where u_id = '%s' ",id);
+
+
+
+	printf("%s\n",query);
+	fflush(stdout);
+
+	query_stat = mysql_query(connection,query);
+
+
+	sql_result = mysql_store_result(connection);
+
+
+	//여러 라인 읽을려면 여기 바꾸시면 돼요  ㅇㅇㅁㅇㅇ
+	sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL){
+		printf("sql_row is NULL ..\n");
+		return 0;
+	}
+
+	for(i=0; i < 4; i++)
+		sprintf(buf,"%s%s#",buf,sql_row[i]);
+	CHOP(buf);
+	sprintf(buf,"%s\n",buf);
+
+
+
+	printf("%s",buf);
+	return 0;
+
+
+
+
 
 }
 
