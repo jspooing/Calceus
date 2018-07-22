@@ -54,6 +54,7 @@ void sendresult(int sock){
 
 	printf("Backend running...\n");
 
+	
 	while(1){	
 		if(access(STREAM_CON,F_OK)==0)
 			break;
@@ -92,10 +93,16 @@ void* t_testBackend(void *data){
 
 	printf("Backend running...\n");
 
+	system("echo '1234' |sudo -S python /home/chc/calceus/analysis.py");
+
+	
 	while(1){	
-		if(access(STREAM_CON,F_OK)==0)
+		if(access(STREAM_VAL,F_OK)==0)
 			break;
 	}
+
+	printf("wait end\n");
+	fflush(stdout);
 
 	system("sed -i 's/ //g' /home/chc/calceus/value.txt");
 
@@ -124,7 +131,7 @@ void* t_testBackend(void *data){
 		DBdelete("TEST","id",id);
 
 	DBinsert("TEST",ilist,11);
-//	system("rm /home/chc/calceus/value.txt");
+	system("rm /home/chc/calceus/value.txt");
 //	system("rm /home/chc/calceus/datastream/stream.txt");
 //	system("rm /home/chc/calceus/datastream/content.txt");
 
