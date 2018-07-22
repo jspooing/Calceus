@@ -12,7 +12,7 @@
 
 #define BUFSIZE 1024 //버퍼 사이즈 
 #define PORT 7163 //서버 포트 
-#define MAX_CLIENT 5 //클라이언트 최대 
+#define MAX_CLIENT 10 //클라이언트 최대 
 
 void error_handling(char* message); //예외처리 함수 
 void* clnt_connection(void* arg);  //클라이언트 서비스 스레드 함수 
@@ -27,13 +27,18 @@ int clnt_indicator = 0;  //클라이언트 교통정리용
 
 int main(int argc, char ** argv)
 {
-	int serv_sock; // 서버  소켓 
+	int serv_sock; // 서버  소켓
+	struct linger ling;
+	ling.l_onoff=1;
+	ling.l_linger=0;
+
 	struct sockaddr_in serv_addr;   //서버,클라이언트  소켓 주소 구조체 
 	struct sockaddr_in clnt_addr;
 	int clnt_addr_size;  // 클라이언트 소켓 구조체 사이즈 
 	pthread_t t_clnt[MAX_CLIENT]; // 스레드 구조체 배열 
 
 
+	setsockopt(serv_sock,SOL_SOCKET,SO_LINGER,&ling,sizeof(ling));
 
 	if((serv_sock = socket(AF_INET, SOCK_STREAM, 0))<0)  //서버 소켓 생성 
 	{
@@ -151,7 +156,7 @@ void *clnt_connection(void* arg){
 			sprintf(uid,"%s",command[1]);
 			sprintf(buf,"%d",i);	
 			str_len = strlen(buf);
-			write(sock,buf,str_len);
+			write(sock,buf,sizeof(buf));
 			printf("server send c%d:%s\n",sock,buf);
 		}
 
@@ -172,16 +177,18 @@ void *clnt_connection(void* arg){
 				sprintf(data[0],"%s",command[1]);
 			    sprintf(data[1],"%s",command[7]);
 				sprintf(data[2],"%s",command[8]);
-				
+				sprintf(data[3],"Shoe contest Award");
+				sprintf(data[4],"0");
+
 				if(!strcmp(data[1],"zzzz"))
 				sprintf(data[1],"");
 				
 				if(!strcmp(data[2],"zzzz"))
-				sprintf(data[2],"");
-
+				sprintf(data[2],"no intro");
+				
 
 			
-				DBinsert("D_DESIGNER",data,3);
+				DBinsert("D_DESIGNER",data,5);
 			}
 
 		}
@@ -196,7 +203,7 @@ void *clnt_connection(void* arg){
 			}
 
 
-			write(sock,buf,BUFSIZE);
+			write(sock,buf,strlen(buf));
 		}
 
 		else if(!strcmp(command[0],"img1")){
@@ -210,7 +217,7 @@ void *clnt_connection(void* arg){
 		
 			memset(buf,0x00,sizeof(buf));
 			DBselect_click(buf,command[1]);
-			write(sock,buf,sizeof(buf));
+			write(sock,buf,strlen(buf));
 
 		}
 	
@@ -223,8 +230,8 @@ void *clnt_connection(void* arg){
 		
 			if(DBcheck_designer(uid)){
 
-				DBselect_designer(buf,uid);
-				write(sock,buf,BUFSIZE);
+				DBselect_designer(buf,uid,7);
+				write(sock,buf,strlen(buf));
 			}
 
 			else 
@@ -296,6 +303,7 @@ void *clnt_connection(void* arg){
 		}
 
 		else if (!strcmp(command[0],"order")){
+			
 
 			sprintf(data[0],"%d",getMAX("S_ORDER","o_num")+1);
 			sprintf(data[1],"%s",uid);
@@ -312,7 +320,9 @@ void *clnt_connection(void* arg){
 
 
 			//////////////////////////////////////////////
-
+		
+			if(DBcheck("S_ORDER","u_id",uid))
+				DBdelete("S_ORDER","u_id",uid);
 
 
 			DBinsert("S_ORDER",data,10);
@@ -324,14 +334,31 @@ void *clnt_connection(void* arg){
 			if(DBcheck("S_ORDER","d_id",uid)){
 
 				DBselect_user(buf,uid);
-				write(sock,buf,BUFSIZE);
+				write(sock,buf,strlen(buf));
 			}
 
-			else 
-				write(sock,"no\n",4);
+			else{ 
+				memset(buf,0x00,sizeof(buf));
+				sprintf(buf,"no\n");
+				write(sock,buf,strlen(buf));
+			}
+
+		}
+
+		else if(!strcmp(command[0],"usermain")){
+				DBselect_usermain(buf,uid);
+				write(sock,buf,strlen(buf));
+
+		}
+		else if(!strcmp(command[0],"designermain")){
+
+				DBselect_designer(buf,uid,3);
+				write(sock,buf,strlen(buf));
+
 
 
 		}
+
 
 		else if(!strcmp(command[0],"match")){
 			//////////o_num 은 주문한놈 아이디 인겁니다 !! 
@@ -342,9 +369,13 @@ void *clnt_connection(void* arg){
 				sprintf(data[i],"%s",command[i]);
 
 			sprintf(data[5],"%s",uid);
+			
+
+				
 
 			DBinsert("REQUST",data,6);
-			sbuy(command[1],uid);
+			sbuy(command[1],uid,atoi(data[0]));
+
 
 
 		}
@@ -352,20 +383,21 @@ void *clnt_connection(void* arg){
 
 		else if(!strcmp(command[0],"list")){
 		
+			memset(buf,0x00,sizeof(buf));
 			DBselect_olist(buf);
-			write(sock,buf,BUFSIZE);
+			write(sock,buf,strlen(buf));
 		
 		}
 		else if(!strcmp(command[0],"ir")){
 			
 			
 			DBselect_match(buf,"REQUST","o_num",command[1],5);
-			write(sock,buf,500);
+			write(sock,buf,sizeof(buf));
 		
 		}
 
 		else if(!strcmp(command[0],"buy")){
-			sbuy(command[1],command[2]);
+			sbuy(command[1],command[2],-1);
 		}
 		else 
 
