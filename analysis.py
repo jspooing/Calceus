@@ -68,7 +68,7 @@ def visualize(pressure):
 
     plt.ylabel('Pressure Value')
     plt.xlabel('The pressure of Foot')
-    plt.savefig('./result.png')
+    plt.savefig('/home/chc/web/fserver/myapp/static/result.png')
 
 def check_habit():
     data=gyro()
@@ -118,7 +118,7 @@ def contents(data):
 
     result=info1+'\n'+info+'\n'+sub0+sub1+bal+'\n'+sub2
 
-    out_text=open('./content.txt', 'w')
+    out_text=open('/home/chc/calceus/datastream/content.txt', 'w')
     out_text.write(result)
     out_text.close()
 
