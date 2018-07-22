@@ -61,6 +61,43 @@ int DBinsert(char* table , char data[][200], int nData){
 
 }
 
+int DBdelete(char* table , char* col, char* val){
+
+	MYSQL *connection = NULL, conn;
+	MYSQL_RES *sql_result;
+	MYSQL_ROW sql_row;
+	int query_stat;
+	char query[255];
+	int i;
+
+	mysql_init(&conn);
+	connection= mysql_real_connect(&conn,DB_HOST,DB_USER,DB_PASS,DB_NAME,
+			3306,(char *)NULL, 0 );
+
+	if(connection == NULL)
+	{
+		fprintf(stderr, "Mysql connection error : %s",mysql_error(&conn));
+		return -1;
+	}
+
+	sprintf(query,"delete from %s where %s = '%s'",table,col,val);
+
+
+
+	printf("DBdelete : ");
+	printf("%s\n",query);
+
+
+	fflush(stdout);
+	query_stat = mysql_query(connection,query);
+
+
+	mysql_close(connection);
+	return 1;
+
+
+}
+
 
 int checkLogin(char id[15],char pw[15])
 {
@@ -293,7 +330,7 @@ int DBselect_user(char* buf,char* value){
 		return -1;
 	}
 
-	sprintf(query,"select * from S_ORDER join USER on u_id = id  where d_id = '%s'",value);
+	sprintf(query,"select O.u_id,O.sex,O.size,O.wide,O.o_detail from USER as U , S_ORDER as O where O.u_id = U.id and O.d_id = '%s';",value);
 
 	printf("%s\n",query);
 	fflush(stdout);
@@ -314,8 +351,9 @@ int DBselect_user(char* buf,char* value){
 
 	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
 
-
-		sprintf(buf,"%s#%s#%s#%s#%s#%s#%s#",sql_row[1],sql_row[7],sql_row[13],sql_row[3],sql_row[4],sql_row[5],sql_row[6]);
+		for(i=0; i < 5; i++)
+			sprintf(buf,"%s%s#",buf,sql_row[i]);
+	
 		CHOP(buf);
 		sprintf(buf,"%s/",buf);
 	}
@@ -326,7 +364,7 @@ int DBselect_user(char* buf,char* value){
 
 }
 
-int DBselect_designer(char* buf,char* value){
+int DBselect_usermain(char* buf,char* value){
 	MYSQL *connection  = NULL, conn;
 	MYSQL_RES *sql_result;
 	MYSQL_ROW sql_row;
@@ -349,7 +387,65 @@ int DBselect_designer(char* buf,char* value){
 		return -1;
 	}
 
-	sprintf(query,"select D.id,D.Mnum,R.r_date,D.id,D.aff,D.career,D.intro from  D_DESIGNER as D, S_ORDER as O,REQUST as R where O.d_id = D.id and O.d_id = R.d_id and O.u_id ='%s'",value);
+	sprintf(query,"select O.u_id,O.sex,O.size,O.wide,U.email from USER as U , S_ORDER as O where O.u_id = U.id and O.d_id = '%s';",value);
+
+	printf("%s\n",query);
+	fflush(stdout);
+
+	query_stat = mysql_query(connection,query);
+
+	if(query_stat != 0)
+	{
+
+		fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+
+
+	sql_result = mysql_store_result(connection);
+
+
+	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
+
+		for(i=0; i < 5; i++)
+			sprintf(buf,"%s%s#",buf,sql_row[i]);
+	
+		CHOP(buf);
+		sprintf(buf,"%s/",buf);
+	}
+	CHOP(buf);
+	sprintf(buf,"%s\n",buf);	
+	printf("%s",buf);
+	return 0;
+
+}
+
+
+int DBselect_designer(char* buf,char* value,int fn){
+	MYSQL *connection  = NULL, conn;
+	MYSQL_RES *sql_result;
+	MYSQL_ROW sql_row;
+
+	int query_stat;
+	int stat =0;
+	char query[255];
+	char correct[15];
+	int i;
+
+
+	printf("DB_select : ");
+	fflush(stdout);
+	mysql_init(&conn);
+	connection = mysql_real_connect(&conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 3306, (char *)NULL, 0);
+
+	if(connection == NULL)
+	{
+		fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+	sprintf(query,"select D.id,D.aff,U.email,O.size,O.wide,O.color,O.o_detail from D_DESIGNER as D, S_ORDER as O,REQUST as R, USER as U where O.d_id = D.id and O.d_id = R.d_id and D.id= U.id and O.u_id ='%s';",value);
 
 	printf("%s\n",query);
 	fflush(stdout);
@@ -369,7 +465,7 @@ int DBselect_designer(char* buf,char* value){
 
 	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
 
-		for(i=0; i < 7; i++)
+		for(i=0; i < fn; i++)
 			sprintf(buf,"%s%s#",buf,sql_row[i]);
 		CHOP(buf);
 		sprintf(buf,"%s/",buf);
@@ -548,7 +644,7 @@ int DBselect_click(char* buf, char* id){
 
 }
 
-int sbuy(char* num,char * id){
+int sbuy(char* num,char * id, int rnum){
 
 	MYSQL *connection = NULL, conn;
 	MYSQL_RES *sql_result;
@@ -567,7 +663,7 @@ int sbuy(char* num,char * id){
 		return -1;
 	}
 
-	sprintf(query,"update S_ORDER set d_id = '%s' where u_id = %s",id,num );
+	sprintf(query,"update S_ORDER set d_id = '%s',rnum = %d where u_id = '%s'",id,rnum,num );
 
 
 	printf("%s",query);
@@ -582,3 +678,4 @@ int sbuy(char* num,char * id){
 
 
 }
+

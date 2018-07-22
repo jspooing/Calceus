@@ -121,7 +121,7 @@ void* t_testBackend(void *data){
 		}
 
 	if(DBcheck("TEST","id",id))
-		printf("renew data..\n");
+		DBdelete("TEST","id",id);
 
 	DBinsert("TEST",ilist,11);
 //	system("rm /home/chc/calceus/value.txt");
