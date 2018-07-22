@@ -159,6 +159,9 @@ void *clnt_connection(void* arg){
 			write(sock,buf,sizeof(buf));
 			printf("server send c%d:%s\n",sock,buf);
 		}
+		else if(!strcmp(command[0],"logout")){
+			memset(uid,0x00,15);
+		}
 
 
 		// 유저 회원가입 
@@ -346,18 +349,49 @@ void *clnt_connection(void* arg){
 		}
 
 		else if(!strcmp(command[0],"usermain")){
+		
+			if(DBcheck("S_ORDER","d_id",uid)){
+
+				
 				DBselect_usermain(buf,uid);
 				write(sock,buf,strlen(buf));
 
 		}
+
+			else{ 
+				memset(buf,0x00,sizeof(buf));
+				sprintf(buf,"no\n");
+				write(sock,buf,strlen(buf));
+			}
+
+
+			
+				}
 		else if(!strcmp(command[0],"designermain")){
+
+
+						
+			memset(buf,0x00,sizeof(buf));
+
+		
+			if(DBcheck_designer(uid)){
 
 				DBselect_designer(buf,uid,3);
 				write(sock,buf,strlen(buf));
+			}
 
+			else 
+				write(sock,"no\n",4);
 
 
 		}
+
+		else if(!strcmp(command[0],"userlist")){
+
+				DBselect_userlist(buf,uid);
+				write(sock,buf,strlen(buf));
+		}
+
 
 
 		else if(!strcmp(command[0],"match")){

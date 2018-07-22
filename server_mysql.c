@@ -306,6 +306,60 @@ int DBselect_match(char * buf,char* table ,char *column ,char* value, int dnum){
 	return 0;
 }
 
+int DBselect_userlist(char* buf,char* value){
+	MYSQL *connection  = NULL, conn;
+	MYSQL_RES *sql_result;
+	MYSQL_ROW sql_row;
+
+	int query_stat;
+	int stat =0;
+	char query[255];
+	char correct[15];
+	int i;
+
+
+	printf("DB_select : ");
+	fflush(stdout);
+	mysql_init(&conn);
+	connection = mysql_real_connect(&conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 3306, (char *)NULL, 0);
+
+	if(connection == NULL)
+	{
+		fprintf(stderr, "Mysql connection error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+	sprintf(query,"select O.u_id from USER as U , S_ORDER as O where O.u_id = U.id and O.d_id = '%s';",value);
+
+	printf("%s\n",query);
+	fflush(stdout);
+
+	query_stat = mysql_query(connection,query);
+
+	if(query_stat != 0)
+	{
+
+		fprintf(stderr, "Mysql query error : %s", mysql_error(&conn));
+		return -1;
+	}
+
+
+
+	sql_result = mysql_store_result(connection);
+
+
+	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
+		
+		sprintf(buf,"%s%s#",buf,sql_row[0]);
+	
+	}
+	CHOP(buf);
+	sprintf(buf,"%s\n",buf);	
+	printf("%s",buf);
+	return 0;
+
+}
+
 
 int DBselect_user(char* buf,char* value){
 	MYSQL *connection  = NULL, conn;
@@ -330,7 +384,7 @@ int DBselect_user(char* buf,char* value){
 		return -1;
 	}
 
-	sprintf(query,"select O.u_id,O.sex,O.size,O.wide,O.o_detail from USER as U , S_ORDER as O where O.u_id = U.id and O.d_id = '%s';",value);
+	sprintf(query,"select O.u_id,O.sex,O.size,O.wide,O.color,O.o_detail from USER as U , S_ORDER as O where O.u_id = U.id and O.d_id = '%s';",value);
 
 	printf("%s\n",query);
 	fflush(stdout);
@@ -351,7 +405,7 @@ int DBselect_user(char* buf,char* value){
 
 	while((	sql_row = mysql_fetch_row(sql_result))!=NULL){
 
-		for(i=0; i < 5; i++)
+		for(i=0; i < 6; i++)
 			sprintf(buf,"%s%s#",buf,sql_row[i]);
 	
 		CHOP(buf);
